@@ -1,13 +1,19 @@
 import assert from "node:assert/strict";
+import { join, parse, resolve } from "node:path";
 import { test } from "node:test";
 import { barWidth, contextBar, fmtDuration, fmtTok, parseGitPorcelain, projectName, renderLines, type HudData } from "./render.ts";
 
 const strip = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "");
 
+// Native paths, so the same tests hold on Windows and Linux.
+const root = parse(process.cwd()).root;
+const home = join(root, "Users", "me");
+const project = join(root, "Development", "Local", "harness");
+
 const base: HudData = {
 	model: "GPT-5.6 Sol",
-	cwd: "D:\\Development\\Local\\harness",
-	home: "C:\\Users\\Shy",
+	cwd: project,
+	home,
 	tokensIn: 13_000,
 	tokensOut: 61,
 	cost: 0,
@@ -15,10 +21,10 @@ const base: HudData = {
 };
 
 test("project shows only the last path segment", () => {
-	assert.equal(projectName("D:\\Development\\Local\\harness", "C:\\Users\\Shy"), "harness");
-	assert.equal(projectName("C:\\Users\\Shy\\.pi\\agent", "C:\\Users\\Shy"), "agent");
-	assert.equal(projectName("C:\\Users\\Shy", "C:\\Users\\Shy"), "~");
-	assert.equal(projectName("D:\\", "C:\\Users\\Shy"), "D:\\");
+	assert.equal(projectName(project, home), "harness");
+	assert.equal(projectName(join(home, ".pi", "agent"), home), "agent");
+	assert.equal(projectName(home, home), "~");
+	assert.equal(projectName(root, home), resolve(root));
 });
 
 test("formatters", () => {
