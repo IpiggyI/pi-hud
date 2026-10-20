@@ -1,0 +1,27 @@
+{
+  "name": "pi-hud",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "claude-hud style two-line footer for pi.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IpiggyI/pi-hud.git"
+  },
+  "keywords": [
+    "pi-package"
+  ],
+  "scripts": {
+    "test": "node --test render.test.ts"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*"
+  }
+}
